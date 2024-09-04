@@ -1,0 +1,43 @@
+#Работа аналитика
+#Разделяет изображения по категориям(природа, достопримечательности, здания)
+from mlforkidsimages import MLforKidsImageProject
+
+# treat this key like a password and keep it secret!
+key = "91bdb5b0-6a03-11ef-b807-b1c86b00d51a8f59c38d-01be-4672-877d-1c3b203dad56"
+
+# this will train your model and might take a little while
+myproject = MLforKidsImageProject(key)
+myproject.train_model()
+
+# CHANGE THIS to the image file you want to recognize
+demo = myproject.prediction("my-test-image.jpg")
+
+label = demo["class_name"]
+confidence = demo["confidence"]
+
+# CHANGE THIS to do something different with the result
+print ("result: '%s' with %d%% confidence" % (label, confidence))
+
+#Разделяет отзывы на позитивные и негативные
+def classify(text):
+    key = "94c41640-6a63-11ef-8862-7949966a810c7d8e5f7e-3715-4582-8fca-096b082fee0b"
+    url = "https://machinelearningforkids.co.uk/api/scratch/"+ key + "/classify"
+
+    response = requests.get(url, params={ "data" : text })
+
+    if response.ok:
+        responseData = response.json()
+        topMatch = responseData[0]
+        return topMatch
+    else:
+        response.raise_for_status()
+
+
+demo = classify("Отзыв, который нужно проверить")
+
+label = demo["class_name"]
+confidence = demo["confidence"]
+
+
+# CHANGE THIS to do something different with the result
+print ("result: '%s' with %d%% confidence" % (label, confidence))
